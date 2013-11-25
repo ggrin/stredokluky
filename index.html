@@ -1,15 +1,19 @@
 <html>
   <head>
-    <style rel="style.css"></style>
+    <link rel="stylesheet" href="style.css"></style>
     <script src="lib/remotestorage.js"></script>
     <script src="lib/remotestorage-credentials.js"></script>
     <script src="main.js"></script>
   </head>
   <body>
-    <div id=meta> 
-      <strong>Redirect URI </strong> : <span id="redirect_uri"></span>
+    <div id="meta" class="box"> 
+      <strong>Redirect URI  :: <span id="redirect_to"></span></strong>
+      <br/>
+      <strong>requested Platform :: <span id="platform"></span></strong>
+      <br/>
+      
     </div>
-    <div id="credentials_container"></div>
-    <button id="go">Go!</button>
+    <div id="credentials_container" class="box"></div>
+    <button id="go" class="button">Go!</button>
   </body>
 </html>

@@ -1,0 +1,32 @@
+body {
+    background-color: rgb(13,13,13);
+    color: rgb(0,128,0);
+    font: monospace;
+}
+
+.box {
+    border: 1px rgb(0,144,0) solid ;
+    border-radius: 42px;
+    background-color: rgb(0,0,0);
+    margin: 10px;
+    padding: 15px;
+    
+}
+
+.button {
+    border: 3px rgb(32,176,16) goovy;
+    border-radius: 100%;
+    padding: 3px;
+    background-color: rgb(16,0,8);
+    color: rgb(0,256,0);
+}
+#go {
+    
+}
+#meta {
+    
+}
+
+#credentials_container {
+
+}
