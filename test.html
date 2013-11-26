@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <script src="lib/remotestorage.js"></script>
+
+    <script>
+      var stredoklukyUrl = 'http://localhost:3000/'
+      function requestCredentials() {
+        var platform = document.all.platform.value;
+        var redirect_to = document.location.origin + document.location.pathname;
+        var url = stredoklukyUrl +
+          '?redirect_to=' + redirect_to +
+          '&platform=' + platform;
+        console.log(url);
+        document.location = url;
+      }
+
+      window.onload = function() {
+        var hash = document.location.hash;
+      
+        var credential
+        try {
+          credential = JSON.parse(
+            decodeURIComponent(
+              hash.substr(1,hash.length).split('&')[0].split('=')[1]
+            ))
+        } catch (e) {
+          credential = "No Credantial";
+        }
+        if(credential)
+          console.log(credential)
+       
+        document.all.content.textContent = JSON.stringify(credential);
+      
+        // var rs = new RemoteStorage()
+        // rs.displayWidget();
+      
+      }
+    </script>
+
+    <style>
+      #content {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <code id="content"></code>
+    Platform :: <input id="platform" type="text" value="twitter"></input><br>
+    <button onclick="requestCredentials()">!! Get Credentials Now !!</button>
+  <body>
+</html>

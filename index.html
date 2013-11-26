@@ -3,17 +3,23 @@
     <link rel="stylesheet" href="style.css"></style>
     <script src="lib/remotestorage.js"></script>
     <script src="lib/remotestorage-credentials.js"></script>
+    <script src="helper.js"></script>
     <script src="main.js"></script>
   </head>
   <body>
-    <div id="meta" class="box"> 
-      <strong>Redirect URI  :: <span id="redirect_to"></span></strong>
-      <br/>
-      <strong>requested Platform :: <span id="platform"></span></strong>
-      <br/>
+    <div id="widget">
+      <div id="meta" class="box"> 
+        <strong>Redirect URI  :: <span id="redirect_to" class="value"></span></strong>
+        <br/>
+        <strong>requested Platform :: <span id="platform" class="value"></span></strong>
+        <br/>
       
+      </div>
+      <div id="credentials_container" class="box" ></div>
+    
+      <div id="toolbox" class="box" >
+        <button id="go" class="button" >Go!</button>
+      </div>
     </div>
-    <div id="credentials_container" class="box"></div>
-    <button id="go" class="button">Go!</button>
   </body>
 </html>

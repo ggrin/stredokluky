@@ -1,29 +1,9 @@
-var rs;
+var rs = new RemoteStorage()
 var options;
-
-function queryString(str){
-  return str.slice(1).split('&').reduce( 
-    function(m, el){ 
-      var set = el.split('=');
-      if(set[0])
-        m[decodeURIComponent(set[0])]=decodeURIComponent(set[1]); 
-      return m  
-    }, {});
-}
-
-$ = document.querySelector.bind(document);
-
-function setDataset(el, data) {
-  for (var k in data) {
-    if(k[0] == '@')
-      continue;
-    el.dataset[k] = data[k]
-  }
-}
 
 function go() {
   var url = options.redirect_to;
-  url+='#'+encodeURIComponent(
+  url+='#'+options.platform+'='+encodeURIComponent(
     JSON.stringify(
       $('#credentials_container .credential.selected').dataset
     ))
@@ -33,10 +13,11 @@ function go() {
 function init() {
   options =  queryString(location.search);
   if(options.redirect_to) {
-    $('#redirect_uri').textContent = options.redirect_to;
+    $('#redirect_to').textContent = options.redirect_to;
+    $('#platform').textContent = options.platform;
   }
   if(options.platform) {
-    
+    rs.on('ready', showAvailable);
   } else {
     options.platform = '*';
   }
@@ -46,51 +27,68 @@ function init() {
 }
 
 function initRs(){
-  rs = new RemoteStorage()
   //rs.caching.disable('/');
   rs.access.claim('credentials', 'r');
   rs.displayWidget();
-  rs.on('ready', showAvailable);
 }
 
 function selectCredential(event) {
   var el = event.target
+  //find actual credential
   while( !el.classList.contains('credential') ) {
     el = el.parentElement;
   }
-  el.classList.add('selected')
+  //select and deselect old one
+  var oldOne = $('.credential.selected');
+  oldOne && oldOne.classList.remove('selected');
+  el.classList.add('selected');
+}
+
+function renderCredential(name, entry) {
+  //the .credential object
+  var el = document.createElement('dl');
+  el.className = 'credential';
+  setDataset(el, entry);
+  el.addEventListener('click', selectCredential)
+
+  //file name
+  var title = document.createElement('dt');
+  title.textContent = name
+  el.appendChild(title);
+  //content container
+  var dl = cEl('dl')
+  el.appendChild(cEl('dd').appendChild(dl))
+  
+  for(var k in entry) {
+    if( k[0] == '@' )
+      continue;
+    var dt = document.createElement('dt');
+    dt.textContent = k;
+    var dd = document.createElement('dd');
+    dd.textContent = entry[k];
+    //store in the container
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+  }
+  return el;
 }
 
 function showAvailable() {
   if(!( options && options.platform && options.pltform != '*'))
     return;
-  var template = $('#credential_template');
   var container = $('#credentials_container')
   rs.credentials.getByPlatform(options.platform).then(function(listing) {
-    if(!listing) //empty directory
-      return;
+    if(!listing) {
+      var el = cEl('span');
+      el.textContent = "No credentials for this platform !"
+      el.classList.add('warning');
+      container.appendChild(el);
+    }
     for(var name in listing) {
       var entry = listing[name];
-      var dl = document.createElement('dl');
-      dl.className = 'credential';
-      setDataset(dl, entry);
-      dl.addEventListener('click', selectCredential)
-      var title = document.createElement('dt');
-      title.textContent = name
-      dl.appendChild(title);
-      
-      for(var k in entry) {
-        if( k[0] == '@' )
-          continue;
-        var dt = document.createElement('dt');
-        dt.textContent = k;
-        var dd = document.createElement('dd');
-        dd.textContent = entry[k];
-        
-        dl.appendChild(dt);
-        dl.appendChild(dd);
-      }
-      container.appendChild(dl);
+      var el = renderCredential(name, entry);
+      el.classList.add('box');
+      container.appendChild(el);
     }
   })
 } 
