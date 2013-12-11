@@ -9,7 +9,7 @@
   <body>
     <div id="widget">
       <div id="meta" class="box"> 
-        <img id="verifier" alt="no picture choosen"><input type="file" id="verifier_source"></input></img>
+        <img id="verifier" title="this picture is stored in your remoteStorage!  and if it changes you know, that you are not connected to your own storage." alt="no picture choosen"><input type="file" id="verifier_source"></input></img>
         <br/>
         <strong><span class="key">Redirect URI</span>  :: <span id="redirect_to" class="value"></span></strong>
         <br/>
@@ -19,10 +19,9 @@
       </div>
       <div id="credentials_container" class="box" ></div>
       <form id="add_container" class="box">
-        
         <p>
-          <button id="save" class="button">&#x21B2</button>
-          <button id="cancel" class="button">Esc</button>
+          <button id="save" class="button" title="RETURN">&#x21B2</button>
+          <button id="cancel" class="button" title="ESC">Esc</button>
           <label for="platform" class="key">Platform</label> :: <input name="platform" class="value"></input><br/>
           <label for="persona" class="key">Persona</label> :: <input name="persona" class="value"></input>
         </p>
@@ -32,13 +31,27 @@
       </form>
     
       <div id="toolbox" class="box" >
-        <button id="add" class="button" >&#160;+&#160</button>
-        <button id="list-personas" class="button" >
-          P<span class="action-letter">e</span>rsonas</button>
-        <button id="list-platforms" class="button" >
-          P<span class="action-letter">l</span>atforms</button>
-        <button id="go" class="button" ><span class="action-letter">G</span>o!</button>
-        <button id="del" class="button" >Del</button>
+        <button id="add" class="button" title="+">+</button>
+        <button id="del" class="button" title="DEL">Del</button>
+        <big>|</big>
+        <button id="list-personas" class="button"  title="ALT+E">
+           &#x2639&#x263A&#x263B
+           <small>
+             p<span class="action-letter">e</span>ople
+           </small>
+        </button>
+        <button id="list-platforms" class="button" title="ALT+L">
+         &spades;&clubs;&hearts;
+         <small>
+           p<span class="action-letter">l</span>atforms
+         </small>
+        </button>
+        <big>|</big>
+        <button id="go" class="button" title="CTL+ENTER">&#x221a
+            <small>
+              <span class="action-letter">G</span>o!
+          </small>
+        </button>
       </div>
     </div>
   </body>

@@ -37,6 +37,11 @@ input{
     font-family: monospace;
     text-align:center;
     font-family: monospace;
+    outline: none;
+}
+
+input:focus {
+    background-color: rgb(32,0,16);
 }
 
 .alt-down .action-letter {
@@ -59,13 +64,26 @@ input{
 }
 
 .button {
-    border: 3px rgb(32,32,32) inset;
+    border: 3px rgb(32,32,32) outset;
     border-radius: 3px;
-    padding: 3px;
+    padding: 2px 8px;
     background-color: rgb(24,0,12);
     color: rgb(64,96,64);
     font-weight: bold;
     font-family: monospace;
+    outline: none;
+}
+.button small {
+    font-size: 0.5em;
+    display: block;
+}
+
+.button:hover {
+    background-color: rgb(32,0,16);
+}
+
+.button:active {
+    border-style: inset;
 }
 
 .selected {
@@ -107,6 +125,11 @@ input{
 
 #credentials_container button {
     font-size: 0.7em;
+    float: right;
+    margin: 0px 2px;
+    padding: 3px 5px;
+    position: relative;
+    top: -3px;
 }
 
 #add_container {
@@ -116,8 +139,11 @@ input{
     text-align:center;
 }
 
-#add_container .button {
+#add_container #save {
     float: right;
+}
+#add_container #cancel {
+    float: left;
 }
 #save {
     font-size:2em;
@@ -126,6 +152,6 @@ input{
 #toolbox {
     display:flex;
 }
-#toolbox > .button {
+#toolbox > * {
     margin:auto;
 }

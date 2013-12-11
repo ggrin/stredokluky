@@ -201,6 +201,14 @@ function init() {
     } else if (event.keyCode == 40) { //down
       if ($('#credentials_container').style.display != 'none')
         moveSelected(1);
+    } else if(event.keyCode == 37) {  //left
+      var selected = $('#credentials_container .selected')
+      if (!selected.classList.contains('collapsed'))
+        selected.querySelector('.button').click();
+    } else if(event.keyCode == 39) {  //righgt
+      var selected = $('#credentials_container .selected')
+      if (selected.classList.contains('collapsed'))
+        selected.querySelector('.button').click();
     } else if (event.altKey) {       // Alt
       if (event.keyCode == 69) {       // M-e
         event.preventDefault();
@@ -213,9 +221,11 @@ function init() {
       } else if (event.keyCode == 71) { // M-g
         go();
       }
+    } else if (event.ctrlKey && event.keyCode == 13) { // C-return
+      go();
     }
   })
-  
+    
   return ':)';
 }
 
@@ -286,20 +296,21 @@ function renderCredential(platform, persona, name, entry) {
   // collapse button
   var button = cEl('button');
   button.classList.add('button');
-  button.textContent = '-';
+  button.textContent = '+';
+  button.title = "<- / ->"
   var collapse = function(event) {
     console.log('collapse')
     event.cancelBubble = true;
     el.classList.add('collapsed')
     button.onclick = unfold;
-    button.textContent = '-'
+    button.textContent = '+'
   };
   var unfold = function(event) {
     log('unfold')
     event.cancelBubble = true;
-    el.classList.remove('collapsed')
+    el.classList.remove('collapsed');
     button.onclick = collapse;
-    button.textContent = '+'
+    button.textContent = '-'
   };
   button.onclick =  unfold;
   el.appendChild(button);
