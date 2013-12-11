@@ -2,7 +2,9 @@ $ = document.querySelector.bind(document);
 $_ = document.querySelectorAll.bind(document);
 cEl = document.createElement.bind(document);
 
-
+function toA(a) {
+  return Array.prototype.slice.call(a);
+}
 function queryString(str){
   return str.slice(1).split('&').reduce( 
     function(m, el){ 
@@ -19,4 +21,9 @@ function setDataset(el, data) {
       continue;
     el.dataset[k] = data[k]
   }
+}
+
+
+function log(){
+  console.log.apply(console, arguments);
 }
