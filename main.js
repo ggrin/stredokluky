@@ -29,9 +29,6 @@ function del() {
   if(!item)
     return
   var data = item.dataset;
-  if (! confirm('Do you realy want to delete this\n' + 
-          'persona\t: ' + data.persona + '\nplatform\t: ' + data.platform))
-    return;
   rs.credentials.remove(data.platform, data.persona).then(function(status) {
     if(status < 200 && status > 300)
       throw status;
@@ -41,9 +38,35 @@ function del() {
     } else {
       item.remove();
     }
-  } );
+  } ).then(function() {
+
+    notify('restore credential  ' +data.platform + ' : ' + data.persona, 
+           function(){
+             rs.credentials.add(data.platform, data.persona, JSON.parse(data.credential)).then(showCredentials).then(listView);
+           });
+  })
 }
 
+function notify(msg, cb) {
+  
+  var el = $('#notify');
+  el.classList.remove('hidden');
+  var c = cEl('div')
+  
+  function cleanUp(){
+    c.remove();
+    if(el.childElementCount == 0)
+      el.classList.add('hidden');
+  }
+
+  c.textContent = msg;
+  c.onclick = function(){
+    cleanUp();
+    cb(event);
+  }
+  setTimeout(cleanUp, 23108)
+  el.appendChild(c);
+}
 
 function showCredentials() {
   $('#credentials_container').innerHTML = '';
@@ -167,7 +190,7 @@ function init() {
   
   // alt magic
   document.addEventListener('keyup', function(event) {
-    console.log(event)
+    // console.log(event)
     if(!event.altKey && event.keyCode == 18 ) //alt pressed
       document.body.classList.remove('alt-down')
   })
@@ -178,9 +201,9 @@ function init() {
   
   // window
   document.addEventListener('keydown', function(event) {
-    console.log('keyCode : ', event.keyCode)
-    console.log('charCode : ', event.charCode)
-    console.log(event);
+    // console.log('keyCode : ', event.keyCode)
+    // console.log('charCode : ', event.charCode)
+    // console.log(event);
     if(event.target!=document.body) //some input is selected, we are in add mode
       return;
     
@@ -299,7 +322,6 @@ function renderCredential(platform, persona, name, entry) {
   button.textContent = '+';
   button.title = "<- / ->"
   var collapse = function(event) {
-    console.log('collapse')
     event.cancelBubble = true;
     el.classList.add('collapsed')
     button.onclick = unfold;
@@ -341,7 +363,6 @@ function showPersona(persona, container) {
   if( !container )
     container = $('#credentials_container');
   rs.credentials.getByPersona(persona).then(function(listing) {
-    console.log('showPersona :', listing)
     for(var platform in listing) {
       var entry = listing[platform];
       var el = renderCredential(platform, persona,  platform, entry );
@@ -417,7 +438,6 @@ function getVerifier(){
 
 function setVerifier(event){
   var img = $("#verifier_source").files[0];
-  console.log(img);
   if(img)
     rs.credentials.setVerifier(img.slice()).then(getVerifier);
 }

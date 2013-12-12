@@ -155,3 +155,29 @@ input:focus {
 #toolbox > * {
     margin:auto;
 }
+
+
+.hidden {
+    display: none
+}
+
+#notify {
+    display: table-collumn;
+    position: absolute;
+    margin-left: 50%;
+    left:0px;
+    z-index: 5;
+    padding:2px;
+    background-color: rgb(128,96,16);
+}
+#notify > * {
+    border: 1px rgb(0,144,0) solid;
+    border-radius: 8px;
+    margin:1px;
+    margin-top:5px;
+    margin-bottom:3px;
+    padding:3px;
+}
+#notify div:hover {
+    background-color: rgb(128,128,16);
+}
