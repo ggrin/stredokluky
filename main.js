@@ -438,7 +438,12 @@ function showAllPlatforms() {
 
 function getVerifier(){
   rs.credentials.verifier().then(function(img) {
-    $('#verifier').src = URL.createObjectURL(img);
+    if(img) {
+      $('#verifier').src = URL.createObjectURL(img);
+    } else {
+      console.error('no verifier found using stredukluky');
+      $('#verifier').src = 'verifier.jpg'
+    }
   })
 }
 
