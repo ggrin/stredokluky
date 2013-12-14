@@ -153,8 +153,7 @@ input:focus {
     display:flex;
 }
 #toolbox > * {
-    margin:auto;
-}
+    margin:auto;}
 
 
 .hidden {
@@ -170,6 +169,22 @@ input:focus {
     padding:2px;
     background-color: rgb(128,96,16);
 }
+
+#cypher {
+    font-size: 1.3em;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    margin:0px;
+}
+
+#cypher > * {
+    position: relative;
+    margin: auto;
+    display:inline-block;
+}
+
 #notify > * {
     border: 1px rgb(0,144,0) solid;
     border-radius: 8px;
