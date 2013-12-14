@@ -161,7 +161,7 @@ input:focus {
     display: none
 }
 
-#notify {
+.dialog {
     display: table-collumn;
     position: absolute;
     margin-left: 50%;

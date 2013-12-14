@@ -260,6 +260,10 @@ function initRs(){
   //rs.caching.disable('/');
   rs.caching.enable('/credentials/');
   rs.access.claim('credentials', 'rw');
+  rs.credentials.on('need-key', function(cb){
+    console.log('needs key', arguments);
+    cb('key');
+  })
   rs.displayWidget();
 }
 
@@ -363,6 +367,7 @@ function showPersona(persona, container) {
   if( !container )
     container = $('#credentials_container');
   rs.credentials.getByPersona(persona).then(function(listing) {
+    console.log('Persona Listing : ',listing);
     for(var platform in listing) {
       var entry = listing[platform];
       var el = renderCredential(platform, persona,  platform, entry );
@@ -381,6 +386,7 @@ function showPlatform(platform, container) {
     container = $('#credentials_container')
 
   rs.credentials.getByPlatform(platform).then(function(listing) {
+    console.log("found following entries ",listing);
     if(!listing) {
       var el = cEl('span');
       el.textContent = "No credentials for this platform !"
