@@ -42,7 +42,6 @@ function renderCredential(platform, persona, name, entry) {
   el.className = 'credential';
   el.classList.add('box');
   el.classList.add('collapsed');    
-  el.dataset.credential = JSON.stringify(entry);
   el.dataset.platform = platform;
   el.dataset.persona = persona;
   el.addEventListener('click', selectCredential)
@@ -98,6 +97,7 @@ function renderCredential(platform, persona, name, entry) {
       dl.appendChild(dt);
       dl.appendChild(dd);
     }
+    el.dataset.credential = JSON.stringify(entry);
   }
 
   var content = cEl('dl')

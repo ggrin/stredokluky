@@ -4,9 +4,20 @@ var options;
 // Buttons //
        /////
 
-function go() {
+function go(credential) {
   var url = options.redirect_to;
-  url+='#credential='+encodeURIComponent($('#credentials_container .credential.selected').dataset.credential)
+  if(!credential) {
+    var data = $('#credentials_container .credential.selected').dataset
+    var credential = data.credential
+    if(!credential) {
+      rs.credentials.credential(data.platform, data.persona).then(function(ret) {
+        console.log('GONOW')
+        go(JSON.stringify(ret));
+      })
+      return;
+    }
+  }
+  url+='#credential='+encodeURIComponent(credential)
   document.location =  url ;
 }
 

@@ -124,3 +124,7 @@ input[type="file"]{
 #notify div:hover {
     background-color: rgb(128,128,16);
 }
+
+#hourglass {
+    display: none;
+}
