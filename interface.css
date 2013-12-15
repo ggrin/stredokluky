@@ -70,13 +70,11 @@ input:focus {
 }
 
 .dialog {
-    display: table-collumn;
     position: absolute;
-    margin-left: 50%;
     left:0px;
     z-index: 5;
     padding:2px;
-    background-color: rgb(128,96,16);
+    background-color: rgb(128,112,64);
     opacity: 0.8;
     border-radius: 8px;
 }

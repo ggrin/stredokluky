@@ -39,26 +39,31 @@ function del() {
   if(!item)
     return
   var data = item.dataset;
-  rs.credentials.remove(data.platform, data.persona).then(function(status) {
-    if(status < 200 && status > 300)
-      throw status;
-    if(item.parentElement.previousElementSibling.classList.contains('key') && item.parentElement.children.length == 1 ) {
-      item.parentElement.previousSibling.remove();
-      item.parentElement.remove();
-    } else {
-      item.remove();
-    }
-  } ).then(function() {
+  rs.credentials.get(data.platform+'/'+data.persona).then(function(raw) {
+    rs.credentials.remove(data.platform, data.persona).then(function(status) {
+      if(status < 200 && status > 300)
+        throw status;
+      if(item.parentElement.previousElementSibling.classList.contains('key') && item.parentElement.children.length == 1 ) {
+        item.parentElement.previousSibling.remove();
+        item.parentElement.remove();
+      } else {
+        item.remove();
+      }
+    } ).then(function() {
 
-    notify('restore credential  ' +data.platform + ' : ' + data.persona, 
-           function(){
-             rs.credentials.add(data.platform, data.persona, JSON.parse(data.credential)).then(showCredentials).then(listView);
-           });
+      notify('restore credential  <span class="platform">'+
+             data.platform +'</span> : <span class="persona">'+ 
+             data.persona +'</span>', 
+             function(){
+               rs.credentials.put(data.platform+ '/' +data.persona, raw).then(function() {
+                 listView(true);
+               });
+             });
+    })
   })
 }
 
 function notify(msg, cb) {
-  
   var el = $('#notify');
   el.classList.remove('hidden');
   var c = cEl('div')
@@ -69,10 +74,14 @@ function notify(msg, cb) {
       el.classList.add('hidden');
   }
 
-  c.textContent = msg;
-  c.onclick = function(){
-    cleanUp();
-    cb(event);
+  c.innerHTML = msg;
+  if(typeof cb === 'function') {
+    c.onclick = function(){
+      cleanUp();
+      cb(event);
+    }
+  } else if(typeof cb === 'string' || cb instanceof String){
+    c.classList.add(cb)
   }
   setTimeout(cleanUp, 23108)
   el.appendChild(c);
@@ -160,6 +169,8 @@ function init() {
 
   // create new fields
   addContainer.addEventListener('blur', function(event) {
+    if(event.relatedTarget && event.relatedTarget.id == 'key')
+      return;
     var keyval = event.target.parentElement
     if( event.target.name == 'value' && 
         keyval == addContainer.lastElementChild &&
@@ -183,8 +194,10 @@ function init() {
     var platform = addContainer.platform.value;
     var persona = addContainer.persona.value;
     
-    if(!platform || !persona)
+    if(!platform || !persona) {
+      notify("You need at least a Persona and a Platform", 'warning')
       return;
+    }
     
     var data = {}
     var keyvals = Array.prototype.slice.call(addContainer.querySelectorAll('.add-key-val'));
@@ -201,6 +214,19 @@ function init() {
     rs.credentials.add(platform, persona, data).then(function() {
       hourglass.remove();
       listView(true);
+      var inputs = toA(addContainer.querySelectorAll('input'));
+      console.log('going to remove', inputs);
+      for(var i = 0; i < 4; i++){
+        console.log('removing this', inputs[i]);
+        if(i<4) {//number of start inputs
+          inputs[i].value = '';
+        } 
+      }
+      for(var i = 1; i < keyvals.length; i++){
+        keyvals[i].remove();
+      }
+    }, function(e) {
+      notify('saving failed : '+e);
     });
   });
 
@@ -281,7 +307,7 @@ function init() {
       go();
     }
   })
-    
+  
   return ':)';
 }
 

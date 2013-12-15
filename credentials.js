@@ -213,7 +213,7 @@ function getKeyCb (cb){
   div.style.top = (window.innerHeight/2 - div.clientHeight).toFixed(0) + 'px';
   var button = div.querySelector('#key-button');
   var input = div.querySelector('#key');
-  input.focus();
+  setTimeout(input.focus.bind(input) ,0);
   input.onkeyup = function(event) {
     if(event.keyCode == 13 )  //Enter
       button.click();
