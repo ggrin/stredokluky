@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css"></style>
+    <link rel="stylesheet" href="interface.css"></style>
     <script src="lib/remotestorage.js"></script>
     <script src="lib/remotestorage-credentials.js"></script>
     <script src="helper.js"></script>
@@ -9,6 +10,7 @@
     <script src="lib/sjcl.js"></script>
   </head>
   <body>
+
     <div id="notify" class="dialog hidden"></div>
     <div id="cypher" class="hidden">
       <div class="dialog">
@@ -19,7 +21,7 @@
     </div>
     <div id="widget">
       <div id="meta" class="box"> 
-        <img id="verifier" title="this picture is stored in your remoteStorage!  and if it changes you know, that you are not connected to your own storage." alt="no picture choosen"><input type="file" id="verifier_source"></input></img>
+        <img id="verifier" src="verifier.jpg" title="this picture is stored in your remoteStorage!  and if it changes you know, that you are not connected to your own storage." alt="no picture choosen"><input type="file" id="verifier_source"></input></img>
         <br/>
         <strong><span class="key">Redirect URI</span>  :: <span id="redirect_to" class="value"></span></strong>
         <br/>

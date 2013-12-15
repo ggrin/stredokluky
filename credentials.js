@@ -71,26 +71,40 @@ function renderCredential(platform, persona, name, entry) {
     button.onclick = collapse;
     button.textContent = '-'
   };
-  button.onclick =  unfold;
+  button.onclick =  function(event){
+    var hourglass = $('#hourglass').cloneNode(true);
+    hourglass.id = '';
+    button.parentElement.appendChild(hourglass)
+    rs.credentials.credential(platform, persona).then(function(entry) {
+      renderContent(content, entry);
+      hourglass.remove();
+      unfold(event);
+    })
+  }
   el.appendChild(button);
   
-
   // content container
-  var dl = cEl('dl')
-  el.appendChild(cEl('dd').appendChild(dl))
-  
-  for(var k in entry) {
-    if( k[0] == '@' )
-      continue;
-    var dt = document.createElement('dt');
-    dt.textContent = k;
-    dt.classList.add('key')
-    var dd = document.createElement('dd');
-    dd.classList.add('value')
-    dd.textContent = entry[k];
-    //store in the container
-    dl.appendChild(dt);
-    dl.appendChild(dd);
+  function renderContent(dl, entry) {
+    for(var k in entry) {
+      if( k[0] == '@' )
+        continue;
+      var dt = cEl('dt');
+      dt.textContent = k;
+      dt.classList.add('key')
+      var dd = cEl('dd');
+      dd.classList.add('value')
+      dd.textContent = entry[k];
+      //store in the container
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    }
+  }
+
+  var content = cEl('dl')
+  content.classList.add('content')
+  el.appendChild(cEl('dd').appendChild(content))
+  if(entry) {
+    renderContent(content, entry);
   }
 
   return el;
@@ -99,11 +113,11 @@ function renderCredential(platform, persona, name, entry) {
 function showPersona(persona, container) {
   if( !container )
     container = $('#credentials_container');
-  rs.credentials.getByPersona(persona).then(function(listing) {
+  rs.credentials.getForPersona(persona).then(function(listing) {
     console.log('Persona Listing : ',listing);
-    for(var platform in listing) {
-      var entry = listing[platform];
-      var el = renderCredential(platform, persona,  platform, entry );
+    for(var i = 0; i <  listing.length; i++) {
+      var platform = listing[i];
+      var el = renderCredential(platform, persona,  platform );
       container.appendChild(el);
     }
   })
@@ -118,7 +132,7 @@ function showPlatform(platform, container) {
   if(!container)
     container = $('#credentials_container')
 
-  rs.credentials.getByPlatform(platform).then(function(listing) {
+  rs.credentials.getForPlatform(platform).then(function(listing) {
     console.log("found following entries ",listing);
     if(!listing) {
       var el = cEl('span');
@@ -126,9 +140,9 @@ function showPlatform(platform, container) {
       el.classList.add('warning');
       container.appendChild(el);
     }
-    for(var persona in listing) {
-      var entry = listing[persona];
-      var el = renderCredential(platform, persona, persona, entry);
+    for(var i = 0; i < listing.length; i++) {
+      var persona = listing[i];
+      var el = renderCredential(platform, persona, persona);
       container.appendChild(el);
     }
   })
@@ -175,8 +189,8 @@ function getVerifier(){
     if(img) {
       $('#verifier').src = URL.createObjectURL(img);
     } else {
-      console.error('no verifier found using stredukluky');
-      $('#verifier').src = 'verifier.jpg'
+      console.error('no verifier found');
+      $('#verifier').src = 'no-verifier.jpg'
     }
   })
 }
@@ -193,26 +207,30 @@ function setVerifier(event){
 // RemoteStorage //
              /////
 
+function getKeyCb (cb){
+  var div = $('#cypher');
+  div.classList.remove('hidden');
+  div.style.top = (window.innerHeight/2 - div.clientHeight).toFixed(0) + 'px';
+  var button = div.querySelector('#key-button');
+  var input = div.querySelector('#key');
+  input.focus();
+  input.onkeyup = function(event) {
+    if(event.keyCode == 13 )  //Enter
+      button.click();
+  }
+  button.onclick = function() {
+    cb(input.value);
+    input.value = ''; // erasing value after using the widget
+    div.classList.add('hidden');
+  }
+}
+
 function initRs(){
   rs.caching.disable('/');
   //rs.caching.enable('/credentials/.verifier');
   rs.caching.enable('/credentials/');
   rs.access.claim('credentials', 'rw');
-  rs.credentials.on('need-key', function(cb){ // should be an callback thingie
-    var div = $('#cypher');
-    div.classList.remove('hidden');
-    div.style.top = (window.innerHeight/2 - div.clientHeight).toFixed(0) + 'px';
-    //div.style.right = (body.style.width/2 - div.clientWidth).toFixed(0) + 'px';
-    console.log(div.style.top, div.style.left);
-    div.querySelector('#key-button').onclick = function() {
-      var input = div.querySelector('#key');
-      cb(input.value);
-      input.value = ''; // erasing value after using the widget
-      div.classList.add('hidden');
-    }
-    
-    console.log('needs key', arguments);
-  })
+  rs.credentials.getKeyCb = getKeyCb;
   rs.displayWidget();
 }
 

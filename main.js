@@ -81,6 +81,24 @@ function showCredentials() {
     showAllPlatforms();
 }
 
+function getKeyCb (cb){
+  var div = $('#cypher');
+  div.classList.remove('hidden');
+  div.style.top = (window.innerHeight/2 - div.clientHeight).toFixed(0) + 'px';
+  var button = div.querySelector('#key-button');
+  var input = div.querySelector('#key');
+  input.focus();
+  input.onkeyup = function(event) {
+    if(event.keyCode == 13 )  //Enter
+      button.click();
+  }
+  button.onclick = function() {
+    cb(input.value);
+    input.value = ''; // erasing value after using the widget
+    div.classList.add('hidden');
+  }
+}
+
 function init() {
 
   /////
@@ -166,8 +184,13 @@ function init() {
         data[k] = v;
       }
     })
-    rs.credentials.add(platform, persona, data);
-    listView(true);
+    var hourglass = $('#hourglass').cloneNode(true);
+    hourglass.id = ''
+    addContainer.insertBefore(hourglass, addContainer.firstChild);
+    rs.credentials.add(platform, persona, data).then(function() {
+      hourglass.remove();
+      listView(true);
+    });
   });
 
   //cancel button

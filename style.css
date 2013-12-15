@@ -29,63 +29,6 @@ input[type="file"]{
     display: none;
 }
 
-input{
-    background-color: rgb(23,12,23);
-    border: 1px rgb(32,21,32) inset;
-    border-radius: 3px;
-    color: rgb(32,136,32);
-    font-family: monospace;
-    text-align:center;
-    font-family: monospace;
-    outline: none;
-}
-
-input:focus {
-    background-color: rgb(32,0,16);
-}
-
-.alt-down .action-letter {
-    text-decoration:underline;
-}
-
-.collapsed dl {
-    display: none;
-}
-
-.box {
-    border: 1px rgb(0,144,0) solid ;
-    border-radius: 16px;
-    background-color: rgb(0,0,0);
-    margin-top: 5px;
-    margin-bottom: 3px;
-    margin-left: 1px;
-    margin-right: 1px;
-    padding: 7px;
-}
-
-.button {
-    border: 3px rgb(32,32,32) outset;
-    border-radius: 3px;
-    padding: 2px 8px;
-    background-color: rgb(24,0,12);
-    color: rgb(64,96,64);
-    font-weight: bold;
-    font-family: monospace;
-    outline: none;
-}
-.button small {
-    font-size: 0.5em;
-    display: block;
-}
-
-.button:hover {
-    background-color: rgb(32,0,16);
-}
-
-.button:active {
-    border-style: inset;
-}
-
 .selected {
     border: 2px red solid;
     margin-top: 4px;
@@ -154,21 +97,6 @@ input:focus {
 }
 #toolbox > * {
     margin:auto;}
-
-
-.hidden {
-    display: none
-}
-
-.dialog {
-    display: table-collumn;
-    position: absolute;
-    margin-left: 50%;
-    left:0px;
-    z-index: 5;
-    padding:2px;
-    background-color: rgb(128,96,16);
-}
 
 #cypher {
     font-size: 1.3em;
