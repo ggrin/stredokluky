@@ -113,7 +113,7 @@ function renderCredential(platform, persona, name, entry) {
 function showPersona(persona, container) {
   if( !container )
     container = $('#credentials_container');
-  rs.credentials.getForPersona(persona).then(function(listing) {
+  return rs.credentials.getForPersona(persona).then(function(listing) {
     console.log('Persona Listing : ',listing);
     for(var i = 0; i <  listing.length; i++) {
       var platform = listing[i];
@@ -132,7 +132,7 @@ function showPlatform(platform, container) {
   if(!container)
     container = $('#credentials_container')
 
-  rs.credentials.getForPlatform(platform).then(function(listing) {
+  return rs.credentials.getForPlatform(platform).then(function(listing) {
     console.log("found following entries ",listing);
     if(!listing) {
       var el = cEl('span');
@@ -164,18 +164,24 @@ function keyBox(value, credentials_container) {
 
 function showAllPersonas(){
   var credentialsContainer = $('#credentials_container');
-  rs.credentials.personas().then(function(personas) {
+  return rs.credentials.personas().then(function(personas) {
     personas.forEach(function(persona) {
-      showPersona(persona, keyBox(persona, credentialsContainer));
+      showPersona(persona, keyBox(persona, credentialsContainer)).then(undefined, function(e) {
+        console.error('showing persona '+persona+' failed : ', e, e.stack);
+        notify('showing persona '+persona+' failed : '+ e.message, 'warning');
+      });
     })
   })
 }
 
 function showAllPlatforms() {
   var credentialsContainer = $('#credentials_container');
-  rs.credentials.platforms().then(function(platforms) {
+  return rs.credentials.platforms().then(function(platforms) {
     platforms.forEach(function(platform) {
-      showPlatform(platform, keyBox(platform, credentialsContainer));
+      showPlatform(platform, keyBox(platform, credentialsContainer)).then(undefined, function(e) {
+        console.error('showing Platform '+platform+' failed : ', e, e.stack);
+        notify('showing Platform '+persona+' failed : '+ e.message, 'warning');
+      });
     })
   })
 }

@@ -89,16 +89,22 @@ function notify(msg, cb) {
 
 function showCredentials() {
   $('#credentials_container').innerHTML = '';
+  var promise;
   if (options.show == 'persona')
-    showAllPersonas();
+    promise = showAllPersonas();
   else if (options.show == 'platform')
-    showAllPlatforms();
+    promise = showAllPlatforms();
   else if (options.platform)
-    showPlatform(options.platform);
+    promise = showPlatform(options.platform);
   else if (options.persona)
-    showPersona(options.persona);
+    promise = showPersona(options.persona);
   else
-    showAllPlatforms();
+    promise = showAllPlatforms();
+  promise.then(undefined, function(e) {
+    console.error('showCredentials failed', e, e.stack);
+    notify('showing Credentials failed " '+e.message,'warning')
+  })
+  return promise;
 }
 
 function getKeyCb (cb){
@@ -150,11 +156,11 @@ function init() {
 
   $('#list-platforms').addEventListener('click', function(){
     options.show = 'platform';
-    showCredentials();
+    listView(true);
   });
   $('#list-personas').addEventListener('click', function(){
     options.show = 'persona';
-    showCredentials();
+    listView(true);
   })
   
   /////
@@ -164,7 +170,7 @@ function init() {
   
   // platfrom prefill
   if (options.platform) {
-    addContainer.platform.value = options.platform
+    addContainer.platform.value = options.platform;
   }
 
   // create new fields
@@ -226,7 +232,8 @@ function init() {
         keyvals[i].remove();
       }
     }, function(e) {
-      notify('saving failed : '+e);
+      console.error('saving failed : ',e,e.stack);
+      notify('saving failed : '+e.message);
     });
   });
 
@@ -263,7 +270,7 @@ function init() {
     // console.log('keyCode : ', event.keyCode)
     // console.log('charCode : ', event.charCode)
     // console.log(event);
-    if(event.target!=document.body) //some input is selected, we are in add mode
+    if(event.target!=document.body) //some input is selected, we are in add mode or enter cypher mode
       return;
     
     if ([187,107].indexOf(event.keyCode) >= 0) { // plus + and =
